@@ -10,14 +10,14 @@ class LeafNode:
 
 class AADDNode:
     
-    def __init__(self, condition_affine_form_id: int, left=None, right=None):
-        # condition_affine_form_id refers to the affine form stored in the builder
-        self.condition_affine_form_id = condition_affine_form_id
-        self.left = left  # Left branch
-        self.right = right  # Right branch
+    def __init__(self, constraint_id: int, left=None, right=None):
+        # constraint_id refers to the affine form stored in the builder
+        self.constraint_id = constraint_id
+        self.high = left  # Left branch
+        self.low = right  # Right branch
 
     def __repr__(self):
-        return f"AADDNode(Condition ID: {self.condition_affine_form_id}, Left: {self.left}, Right: {self.right})"
+        return f"AADDNode(Condition ID: {self.constraint_id}, Left: {self.high}, Right: {self.low})"
 
 class AADD:
     def __init__(self, builder: Builder):
@@ -63,6 +63,16 @@ class AADD:
             new_affine_form = operation(affine_form1, affine_form2)
             #new_affine_form_id = self.builder.create_affine_form(new_affine_form.constant, new_affine_form.noise_coeffs)
             return LeafNode(new_affine_form)
+        
+        if isinstance(node1, LeafNode) and isinstance(node2,AADDNode):
+            high = self._apply(node1,node2.high, operation)
+            low = self._apply(node1,node2.low, operation)
+            return AADDNode(high,low,node2.constraint_id)
+
+        if isinstance(node1,AADDNode) and isinstance(node2,LeafNode):
+            high = self._apply(node1.high,node2, operation)
+            low = self._apply(node1.low,node2, operation)
+            return AADDNode(high,low,node1.constraint_id)
 
         if isinstance(node1, AADDNode) and isinstance(node2, AADDNode):
             if node1.constraint_id == node2.constraint_id:
@@ -104,8 +114,8 @@ class AADD:
         if isinstance(node, LeafNode):
             print(f"{indent}LeafNode(affine_form_id={node.affine_form})")
         elif isinstance(node, AADDNode):
-            print(f"{indent}AADDNode(Condition ID: {node.condition_affine_form_id})")
+            print(f"{indent}AADDNode(Condition ID: {node.constraint_id})")
             print(f"{indent}  Left:")
-            self._print_node(node.left, level + 1)
+            self._print_node(node.high, level + 1)
             print(f"{indent}  Right:")
-            self._print_node(node.right, level + 1)
+            self._print_node(node.low, level + 1)

@@ -3,6 +3,7 @@ from .affine_form import AffineForm
 class Builder:
     
     def __init__(self):
+        self.id_counter = 0
         self.constraints = {}
         self.noise_symbols = {}  # Dictionary to store unique noise symbols (key: symbol name, value: coefficient)
 
@@ -26,7 +27,9 @@ class Builder:
         :param affine_form: AffineForm instance to be added as a constraint.
         :return: Unique ID of the added constraint.
         """
-        constraint_id = len(self.constraints)  # New unique ID
+        
+        constraint_id = self.id_counter
+        self.id_counter+=1  # New unique ID
         self.constraints[constraint_id] = affine_form
         return constraint_id
 
