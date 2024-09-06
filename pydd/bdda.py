@@ -1,33 +1,55 @@
 from .builder import Builder
 
+
+class BDDALeafNode:
+    """
+    """
+    
+    def __init__(self,boolean):
+        self.value = boolean
+
+    def __repr__(self):
+        return f"Leaf(value={self.value})"
+
+
 class BDDANode:
-    def __init__(self, condition_affine_form_id: int, left=None, right=None):
-        self.condition_affine_form_id = condition_affine_form_id
-        self.left = left
-        self.right = right
+    """
+    """
+    def __init__(self, constraint_id: int, high=None, low=None):
+        self.constraint_id = constraint_id
+        self.high = high
+        self.low = low
 
     def __repr__(self):
         return f"BDDA Node(Condition ID: {self.condition_affine_form_id}, Left: {self.left}, Right: {self.right})"
 
 class BDDA:
+    """
+    
+    """
+
     def __init__(self, builder: Builder):
         self.builder = builder
         self.root = None
 
-    def insert(self, affine_form_id: int, left_value: bool, right_value: bool):
-        self.root = BDDANode(affine_form_id, left_value, right_value)
+    def build(self,node):
+        self.root = node
 
-    def evaluate(self, x: dict):
-        return self._evaluate_node(self.root, x)
 
-    def _evaluate_node(self, node, x):
-        if isinstance(node, bool):
-            return node  # Leaf reached, return boolean value
-        condition_affine_form = self.builder.get_affine_form(node.condition_affine_form_id)
-        if condition_affine_form.evaluate(x) <= 0:
-            return self._evaluate_node(node.left, x)
-        else:
-            return self._evaluate_node(node.right, x)
 
-    def __repr__(self):
-        return f"BDDA(Root: {self.root})"
+    def print_tree(self):
+        self._print_node(self.root, level=0)
+
+    def _print_node(self, node, level):
+        indent = " " * level
+        if node is None:
+            print(f"{indent}None")
+            return
+        if isinstance(node, BDDALeafNode):
+            print(f"{indent}Leaf(value={node.value})")
+        elif isinstance(node,BDDANode):
+            print(f"{indent}BDDANode(Condition ID: {node.constraint_id})")
+            print(f"{indent} Left:")
+            self._print_node(node.high, level + 1)
+            print(f"{indent} Right:")
+            self._print_node(node.low, level + 1)

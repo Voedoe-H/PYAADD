@@ -106,4 +106,4 @@ def apply_test_3():
     print("---")
     print(res.root.high)
 
-apply_test_3()
+apply_test_2()
