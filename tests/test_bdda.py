@@ -50,3 +50,5 @@ def test_bdda__2():
     assert res.root.high.low.value == False
     assert res.root.low.high.value == False
     assert res.root.low.low.value == False
+
+test_bdda__1()

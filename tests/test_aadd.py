@@ -13,8 +13,8 @@ def test_apply():
     aadd2 = AADD(builder)
 
     # Define the leaf nodes with affine form IDs
-    leaf_node1 = LeafNode(1)  # Assume constraint ID 1
-    leaf_node2 = LeafNode(2)  # Assume constraint ID 2
+    leaf_node1 = AADDLeafNode(1)  # Assume constraint ID 1
+    leaf_node2 = AADDLeafNode(2)  # Assume constraint ID 2
 
     # Build the AADDs
     aadd1.build(leaf_node1)
@@ -48,11 +48,11 @@ def test_apply_2():
     aadd2 = AADD(builder)
 
     # Define leaf nodes with the created affine forms
-    leaf_node1_aadd1 = LeafNode(form1_id)  # Affine form 1
-    leaf_node2_aadd1 = LeafNode(form2_id)  # Affine form 2
+    leaf_node1_aadd1 = AADDLeafNode(form1_id)  # Affine form 1
+    leaf_node2_aadd1 = AADDLeafNode(form2_id)  # Affine form 2
 
-    leaf_node1_aadd2 = LeafNode(form3_id)  # Affine form 3
-    leaf_node2_aadd2 = LeafNode(form4_id)  # Affine form 4
+    leaf_node1_aadd2 = AADDLeafNode(form3_id)  # Affine form 3
+    leaf_node2_aadd2 = AADDLeafNode(form4_id)  # Affine form 4
 
     # Define internal nodes with conditions (different constraints for internal nodes)
     internal_node_aadd1 = AADDNode(constraint_id=10, high=leaf_node1_aadd1, low=leaf_node2_aadd1)
@@ -85,10 +85,10 @@ def test_apply_3():
     aadd1 = AADD(builder)
     aadd2 = AADD(builder)
 
-    leaf_1_aadd1 = LeafNode(af1)
-    leaf_2_aadd1 = LeafNode(af2)
+    leaf_1_aadd1 = AADDLeafNode(af1)
+    leaf_2_aadd1 = AADDLeafNode(af2)
 
-    leaf_1_aadd2 = LeafNode(af3)
+    leaf_1_aadd2 = AADDLeafNode(af3)
 
     internal_node_aadd1 = AADDNode(constraint_id=10,high=leaf_1_aadd1,low=leaf_2_aadd1)
     
@@ -101,7 +101,6 @@ def test_apply_3():
     res = aadd1.apply(aadd2,add_affine_forms)
 
     res.print_tree()
-    print("---")
-    print(res.root.low)
-    print("---")
-    print(res.root.high)
+
+
+test_apply_3()

@@ -1,7 +1,7 @@
 from .affine_form import AffineForm
 from .builder import Builder
 
-class LeafNode:
+class AADDLeafNode:
     """
         Class representing a leaf of an AADDD
         Attributes:
@@ -12,7 +12,7 @@ class LeafNode:
          self.affine_form = affine_form
 
     def __repr__(self):
-        return f"LeafNode(affine_form={self.affine_form})"
+        return f"AADDLeafNode(affine_form={self.affine_form})"
 
 class AADDNode:
     """
@@ -20,8 +20,8 @@ class AADDNode:
         This is due to the fact that the inequation can be satsified or not, depending on the assignment of the affine forms coefficients and central value as well as the assignments of the noise symbols.
         Attributes:
             constraint_id (int): An integer ID that identiefies an affine form saved in the builder and interpeted as described above. Saving it in the builder and identifying it this way allows sharing across multiple AADDs
-            high (AADDNode or LeafNode): Sub tree that is taken if the constraint is satisfied
-            low (AADDNode or LeafNode): Sub tree that is taken if the constraint is not satsfied
+            high (AADDNode or AADDLeafNode): Sub tree that is taken if the constraint is satisfied
+            low (AADDNode or AADDLeafNode): Sub tree that is taken if the constraint is not satsfied
     """
     def __init__(self, constraint_id: int, high=None, low=None):
         # constraint_id refers to the affine form stored in the builder
@@ -77,19 +77,19 @@ class AADD:
             # Process node1 down the tree
             return self._apply(node1, node2, operation)
 
-        if isinstance(node1, LeafNode) and isinstance(node2, LeafNode):
+        if isinstance(node1, AADDLeafNode) and isinstance(node2, AADDLeafNode):
             affine_form1 = node1.affine_form
             affine_form2 = node2.affine_form
             new_affine_form = operation(affine_form1, affine_form2)
             #new_affine_form_id = self.builder.create_affine_form(new_affine_form.constant, new_affine_form.noise_coeffs)
-            return LeafNode(new_affine_form)
+            return AADDLeafNode(new_affine_form)
         
-        if isinstance(node1, LeafNode) and isinstance(node2,AADDNode):
+        if isinstance(node1, AADDLeafNode) and isinstance(node2,AADDNode):
             high = self._apply(node1,node2.high, operation)
             low = self._apply(node1,node2.low, operation)
             return AADDNode(node2.constraint_id,high,low)
 
-        if isinstance(node1,AADDNode) and isinstance(node2,LeafNode):
+        if isinstance(node1,AADDNode) and isinstance(node2,AADDLeafNode):
             high = self._apply(node1.high,node2, operation)
             low = self._apply(node1.low,node2, operation)
             return AADDNode(node1.constraint_id,high,low)
@@ -131,8 +131,8 @@ class AADD:
             print(f"{indent}None")
             return
 
-        if isinstance(node, LeafNode):
-            print(f"{indent}LeafNode(affine_form_id={node.affine_form})")
+        if isinstance(node, AADDLeafNode):
+            print(f"{indent}AADDLeafNode(affine_form_id={node.affine_form})")
         elif isinstance(node, AADDNode):
             print(f"{indent}AADDNode(Condition ID: {node.constraint_id})")
             print(f"{indent}  Left:")
