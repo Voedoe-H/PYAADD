@@ -87,28 +87,28 @@ class AADD:
         if isinstance(node1, LeafNode) and isinstance(node2,AADDNode):
             high = self._apply(node1,node2.high, operation)
             low = self._apply(node1,node2.low, operation)
-            return AADDNode(high,low,node2.constraint_id)
+            return AADDNode(node2.constraint_id,high,low)
 
         if isinstance(node1,AADDNode) and isinstance(node2,LeafNode):
             high = self._apply(node1.high,node2, operation)
             low = self._apply(node1.low,node2, operation)
-            return AADDNode(high,low,node1.constraint_id)
+            return AADDNode(node1.constraint_id,high,low)
 
         if isinstance(node1, AADDNode) and isinstance(node2, AADDNode):
             if node1.constraint_id == node2.constraint_id:
                 high = self._apply(node1.high, node2.high, operation)
                 low = self._apply(node1.low, node2.low, operation)
-                return AADDNode(high, low, node1.constraint_id)
+                return AADDNode(node1.constraint_id,high, low )
             elif node1.constraint_id > node2.constraint_id:
                 # Create a new node with the id of node1 and process node1's children
                 high = self._apply(node1.high, node2, operation)
                 low = self._apply(node1.low, node2, operation)
-                return AADDNode(high, low, node1.constraint_id)
+                return AADDNode(node1.constraint_id,high, low )
             else:
                 # Create a new node with the id of node2 and process node2's children
                 high = self._apply(node1, node2.high, operation)
                 low = self._apply(node1, node2.low, operation)
-                return AADDNode(high, low, node2.constraint_id)
+                return AADDNode(node2.constraint_id,high, low )
 
         return None
 
