@@ -2,7 +2,7 @@ import pytest
 from pydd.builder import Builder
 from pydd.aadd import *
 
-def apply_test():
+def test_apply():
     builder = Builder()
 
     form1_id = builder.create_affine_form(1.0, {'x': 2.0})
@@ -30,7 +30,7 @@ def apply_test():
     result_aadd = aadd1.apply(aadd2, add_affine_forms)
     result_aadd.print_tree()
     
-def apply_test_2():
+def test_apply_2():
     builder = Builder()
 
     # Create affine forms to use in the leaf nodes
@@ -76,7 +76,7 @@ def apply_test_2():
     # Print the result tree
     result_aadd.print_tree()
 
-def apply_test_3():
+def test_apply_3():
     builder = Builder()
     af1 = builder.create_affine_form(1.0, {'x' : 1.0})
     af2 = builder.create_affine_form(1.0, {'y' : 1.0})
@@ -105,5 +105,3 @@ def apply_test_3():
     print(res.root.low)
     print("---")
     print(res.root.high)
-
-apply_test_2()
