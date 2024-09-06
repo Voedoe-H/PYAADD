@@ -30,57 +30,64 @@ class DecisionTree:
         self.root = node
 
     def apply(self, other_tree, operation):
-        """
-        Apply an operation to this decision tree and another decision tree.
-        :param other_tree: The other decision tree to apply the operation with.
-        :param operation: A function that defines the operation to apply to the leaf nodes.
-        :return: A new DecisionTree resulting from the application of the operation.
-        """
-        new_tree = self.__class__(self.builder)
+        new_tree = self.create_tree()
         new_tree.root = self._apply(self.root, other_tree.root, operation)
         return new_tree
 
+    def create_tree(self):
+        """
+        Factory method to create a new tree of the correct type.
+        Should be overridden in subclasses.
+        """
+        raise NotImplementedError("Subclasses should implement this method.")
+
     def _apply(self, node1, node2, operation):
-        """
-        Recursively apply the operation to the nodes of two decision trees.
-        :param node1: Current node of the first tree.
-        :param node2: Current node of the second tree.
-        :param operation: Function to apply to the leaf nodes.
-        :return: A new node resulting from the operation.
-        """
         if node1 is None or node2 is None:
             return None
-        
-        if isinstance(node1,LeafNode) and isinstance(node2,LeafNode):
-            return LeafNode(operation(node1, node2))
-        
-        if isinstance(node1, LeafNode) and isinstance(node2,DecisionTreeNode):
-            high = self._apply(node1,node2.high, operation)
-            low = self._apply(node1,node2.low, operation)
-            return DecisionTreeNode(node2.constraint_id,high,low)
 
-        if isinstance(node1,DecisionTreeNode) and isinstance(node2,LeafNode):
-            high = self._apply(node1.high,node2, operation)
-            low = self._apply(node1.low,node2, operation)
-            return DecisionTreeNode(node1.constraint_id,high,low)
+        if isinstance(node1, LeafNode) and isinstance(node2, LeafNode):
+            new_value = operation(node1.value, node2.value)
+            return LeafNode(new_value)
+
+        if isinstance(node1, LeafNode) and isinstance(node2, DecisionTreeNode):
+            high = self._apply(node1, node2.high, operation)
+            low = self._apply(node1, node2.low, operation)
+            return self.create_node(node2.constraint_id, high, low)
+
+        if isinstance(node1, DecisionTreeNode) and isinstance(node2, LeafNode):
+            high = self._apply(node1.high, node2, operation)
+            low = self._apply(node1.low, node2, operation)
+            return self.create_node(node1.constraint_id, high, low)
 
         if isinstance(node1, DecisionTreeNode) and isinstance(node2, DecisionTreeNode):
             if node1.constraint_id == node2.constraint_id:
                 high = self._apply(node1.high, node2.high, operation)
                 low = self._apply(node1.low, node2.low, operation)
-                return DecisionTreeNode(node1.constraint_id,high, low )
+                return self.create_node(node1.constraint_id, high, low)
             elif node1.constraint_id > node2.constraint_id:
-                # Create a new node with the id of node1 and process node1's children
                 high = self._apply(node1.high, node2, operation)
                 low = self._apply(node1.low, node2, operation)
-                return DecisionTreeNode(node1.constraint_id,high, low )
+                return self.create_node(node1.constraint_id, high, low)
             else:
-                # Create a new node with the id of node2 and process node2's children
                 high = self._apply(node1, node2.high, operation)
                 low = self._apply(node1, node2.low, operation)
-                return DecisionTreeNode(node2.constraint_id,high, low )
+                return self.create_node(node2.constraint_id, high, low)
 
         return None
+
+    def create_node(self, constraint_id, high, low):
+        """
+        Factory method to create a new node of the correct type.
+        Should be overridden in subclasses.
+        """
+        raise NotImplementedError("Subclasses should implement this method.")
+
+    def create_leaf(self, value):
+        """
+        Factory method to create a new leaf of the correct type.
+        Should be overridden in subclasses.
+        """
+        raise NotImplementedError("Subclasses should implement this method.")
 
     def print_tree(self):
         self._print_node(self.root, level=0)
