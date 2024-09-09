@@ -23,4 +23,17 @@ class BDDA(DecisionTree):
     def create_leaf(self, boolean_value):
         return BDDALeafNode(boolean_value)
 
+    def __and__(self,other):
+        if not isinstance(other,BDDA):
+            return NotImplemented
+        def AND(v1,v2):
+            return v1 and v2
+        return self.apply(other,AND)
+    
+    def __or__(self,other):
+        if not isinstance(other,BDDA):
+            return NotImplemented
+        def OR(v1,v2):
+            return v1 or v2
+        return self.apply(other,OR)
   

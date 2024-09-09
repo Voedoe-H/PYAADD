@@ -102,5 +102,26 @@ def test_apply_3():
 
     res.print_tree()
 
+def test_apply_4():
+    builder = Builder()
+    af1 = builder.create_affine_form(1.0, {'x' : 1.0})
+    af2 = builder.create_affine_form(1.0, {'y' : 1.0})
+    af3 = builder.create_affine_form(1.0, {'z' : 1.0})
 
-test_apply_3()
+    aadd1 = AADD(builder)
+    aadd2 = AADD(builder)
+
+    leaf_1_aadd1 = AADDLeafNode(af1)
+    leaf_2_aadd1 = AADDLeafNode(af2)
+
+    leaf_1_aadd2 = AADDLeafNode(af3)
+
+    internal_node_aadd1 = AADDNode(constraint_id=10,high=leaf_1_aadd1,low=leaf_2_aadd1)
+    
+    aadd1.build(internal_node_aadd1)
+    aadd2.build(leaf_1_aadd2)
+
+    res = aadd1 + aadd2
+    res.print_tree()
+
+test_apply_4()
