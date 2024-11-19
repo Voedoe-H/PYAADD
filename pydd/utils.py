@@ -13,6 +13,6 @@ def multiply_aadd_bdda(aadd, bdda):
         if boolean_value:
             return affine_form
         else:
-            return AffineForm(constant=0, noise_symbols={})
+            return AffineForm(constant=0, noise_symbols={},builder = aadd.builder)
 
     return DecisionTree.apply(aadd, bdda, multiply_affine_with_boolean)

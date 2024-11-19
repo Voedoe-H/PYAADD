@@ -1,10 +1,15 @@
 from .affine_form import AffineForm
 
+
+
 class Builder:
     
     def __init__(self):
+        """
+        Constraint is interpreted as x <= 0 where x is the affine form of the constraint
+        """
         self.id_counter = 0
-        self.constraints = {}
+        self.constraints = {} # Disctionary to store the constraints that exist in the builders context. (key: constraint_id, value: affine form)
         self.noise_symbols = {}  # Dictionary to store unique noise symbols (key: symbol name, value: coefficient)
 
     def create_affine_form(self, constant: float, noise_coeffs: dict) -> AffineForm:
