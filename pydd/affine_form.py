@@ -1,6 +1,5 @@
 #from .builder import Builder
 
-import importlib
 
 class AffineForm:
     def __init__(self, constant: float, noise_symbols: dict, builder):
@@ -109,7 +108,7 @@ class AffineForm:
                             new_noise_symbols[new_key] = value1 * value2
                     else:
                         # Handle cross terms with new noise symbol
-                        new_key = self.builder.create_noise_symbol()  # New unique noise symbol
+                        new_key = self.builder.register_noise_symbols()  # New unique noise symbol
                         new_noise_symbols[new_key] = value1 * value2
 
             return self.builder.create_affine_form(new_constant, new_noise_symbols)

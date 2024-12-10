@@ -1,7 +1,6 @@
 from .affine_form import AffineForm
 
 
-
 class Builder:
     
     def __init__(self):
@@ -9,6 +8,7 @@ class Builder:
         Constraint is interpreted as x <= 0 where x is the affine form of the constraint
         """
         self.id_counter = 0
+        self.noise_symbol_counter = 200000
         self.constraints = {} # Disctionary to store the constraints that exist in the builders context. (key: constraint_id, value: affine form)
         self.noise_symbols = {}  # Dictionary to store unique noise symbols (key: symbol name, value: coefficient)
 
@@ -68,6 +68,10 @@ class Builder:
             raise ValueError(f"Noise symbol '{symbol_id}' already exists.")
         else:
             self.noise_symbols[symbol_id] = 0  # Initialize with a default coefficient (0)
+
+    def addBddmul(self,aadd,bdd):
+        
+        pass
 
     def __repr__(self):
         return f"AffineFormBuilder(Constraints: {self.constraints}, Noise Symbols: {self.noise_symbols})"

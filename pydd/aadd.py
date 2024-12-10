@@ -2,8 +2,14 @@ from .affine_form import AffineForm
 from .builder import Builder
 from .decisiondiagram import *
 from .bdda import *
+from scipy.optimize import linprog
+
 
 class AADDLeafNode(LeafNode):
+
+    def __init__(self, value):
+        super().__init__(value)
+        self.min = self.value.
 
     def __repr__(self):
         return f"AADDLeafNode(affine_form={self.value})"
